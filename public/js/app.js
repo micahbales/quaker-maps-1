@@ -1,12 +1,10 @@
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
-    center: {lat: 48.21158, lng: -99.59531} // defaults to geographical center of north america
-  });
+  var map = new google.maps.Map(document.getElementById('map'));
   placeMarkers(map);
 }
 
 function placeMarkers(map) {
+  var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
   var markers = [];
 
@@ -20,10 +18,12 @@ function placeMarkers(map) {
         map: map
       });
       markers.push(marker);
+      bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
       console.log(`Marker${i} latitude: ${markers[i].position.lat()}`);
       console.log(`Marker${i} longitude: ${markers[i].position.lat()}`);
     }
   });
+  map.fitBounds(bounds); // zoom and center the map according to all markers placed
 };
 
 initMap();
