@@ -19,18 +19,27 @@ function geolocationError(err) {
 function initMap(userLng, userLat) {
   var userLocation = {lat: userLat, lng: userLng};
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 16,
-    center: userLocation || {lat: 38.890102, lng: -76.930355} // defaults to washington, dc
+    zoom: 4,
+    center: userLocation || {lat: 48.21158, lng: -99.59531} // defaults to geographical center of north america
   });
-  placeMarkers(map, userLng, userLat);
+  placeMarkers(map);
 }
 
 // and place markers when initMap is triggered
 
-function placeMarkers(map, lng, lat) {
-  var marker = new google.maps.Marker({
-    position: {lat: lat, lng: lng},
-    map: map
+function placeMarkers(map) {
+  var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
+
+    for (let i = 0; i < json.length; i++) {
+
+      let lat = Number(json[i].latitude);
+      let lng = Number(json[i].longitude);
+
+      var marker = new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map
+      });
+    }
   });
 };
 
