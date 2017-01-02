@@ -6,10 +6,13 @@ function initMap() {
 function placeMarkers(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
+  createMarkers(json, bounds);
+  map.fitBounds(bounds); // zoom and center the map according to all markers placed
+});
+
+function createMarkers(json, bounds) {
   var markers = [];
-
     for (let i = 0; i < json.length; i++) {
-
       let lat = Number(json[i].latitude);
       let lng = Number(json[i].longitude);
 
@@ -22,8 +25,7 @@ function placeMarkers(map) {
       console.log(`Marker${i} latitude: ${markers[i].position.lat()}`);
       console.log(`Marker${i} longitude: ${markers[i].position.lat()}`);
     }
-  });
-  map.fitBounds(bounds); // zoom and center the map according to all markers placed
-};
+  };
+}
 
 initMap();
