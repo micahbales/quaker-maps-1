@@ -6,21 +6,22 @@ function initMap() {
 function populateMap(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
-  var key = "yearlymeeting";
-  var value = "Great Plains YM"
-  var filteredMeetings = filterMeetingResults(json, key, value);
-  createMarkers(map, filteredMeetings, bounds);
+  var searchKey = "yearlymeeting";
+  var searchValue = "Baltimore YM"
+  var filteredMeetingResults = filterMeetingResults(json, searchKey, searchValue);
+  createMarkers(map, filteredMeetingResults, bounds);
   map.fitBounds(bounds); // zoom and center the map according to all markers placed
 });
 
-function filterMeetingResults(json, key, value) {
-  let filteredMeetings = [];
+function filterMeetingResults(json, searchKey, searchValue) {
+  let filteredMeetingResults = [];
   for (let i = 0; i < json.length; i++) {
-    if (json[i][key] === value) {
-      filteredMeetings.push(json[i]);
+    let thisMeeting = json[i][searchKey]
+    if (thisMeeting && thisMeeting.includes(searchValue)) {
+      filteredMeetingResults.push(json[i]);
     }
   }
-  return filteredMeetings;
+  return filteredMeetingResults;
 }
 
 function createMarkers(map, json, bounds) {
