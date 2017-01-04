@@ -8,9 +8,22 @@ function initMap() {
 function populateMap(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", function (json) {
-    createMarkers(map, json, bounds);
+    var key = "yearlymeeting";
+    var value = "Great Plains YM";
+    var filteredMeetings = filterMeetingResults(json, key, value);
+    createMarkers(map, filteredMeetings, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
   });
+
+  function filterMeetingResults(json, key, value) {
+    var filteredMeetings = [];
+    for (var i = 0; i < json.length; i++) {
+      if (json[i][key] === value) {
+        filteredMeetings.push(json[i]);
+      }
+    }
+    return filteredMeetings;
+  }
 
   function createMarkers(map, json, bounds) {
     var markers = [];
@@ -38,7 +51,6 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
   });
 
   marker.addListener('click', function () {
-
     var currentInfoWindow = infowindow;
     currentInfoWindow.close(map);
     infowindow.open(map, marker);

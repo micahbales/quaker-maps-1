@@ -6,9 +6,22 @@ function initMap() {
 function populateMap(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
-  createMarkers(map, json, bounds);
+  var key = "yearlymeeting";
+  var value = "Great Plains YM"
+  var filteredMeetings = filterMeetingResults(json, key, value);
+  createMarkers(map, filteredMeetings, bounds);
   map.fitBounds(bounds); // zoom and center the map according to all markers placed
 });
+
+function filterMeetingResults(json, key, value) {
+  let filteredMeetings = [];
+  for (let i = 0; i < json.length; i++) {
+    if (json[i][key] === value) {
+      filteredMeetings.push(json[i]);
+    }
+  }
+  return filteredMeetings;
+}
 
 function createMarkers(map, json, bounds) {
   var markers = [];
@@ -16,7 +29,6 @@ function createMarkers(map, json, bounds) {
       let meetingInfo = json[i];
       let lat = Number(json[i].latitude);
       let lng = Number(json[i].longitude);
-
 
       let marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
@@ -43,7 +55,6 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
   });
 
   marker.addListener('click', () => {
-
     let currentInfoWindow = infowindow;
     currentInfoWindow.close(map);
     infowindow.open(map, marker);

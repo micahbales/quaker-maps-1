@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build":"babel --presets es2015 ./public/js/es6 -d ./public/js/es5"
+    "build":"babel --presets es2015 ./public/js/es6 --watch -d ./public/js/es5"
   },
   "repository": {
     "type": "git",
