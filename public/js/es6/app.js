@@ -37,11 +37,15 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
     <h3>Yearly Meeting:</h3> <em>${meetingInfo.yearlymeeting || "not affiliated"}</em>
     <h3>Branch:</h3> <em>${meetingInfo.branch || "not affiliated"}</em>
     <h3>Worship Style:</h3> <em>${meetingInfo.worshipstyle || "not defined"}</em>`
+
   var infowindow = new google.maps.InfoWindow({
     content: windowContent
   });
 
-  marker.addListener('click', function() {
+  marker.addListener('click', () => {
+
+    let currentInfoWindow = infowindow;
+    currentInfoWindow.close(map);
     infowindow.open(map, marker);
   });
 }
