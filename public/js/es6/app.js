@@ -1,5 +1,7 @@
+var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
 searchLimits.worshipstyle = "Semi-programmed";
+searchLimits.city = "Richmond";
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'));
@@ -18,14 +20,35 @@ function populateMap(map) {
 function filterMeetingResults(json) {
   let filteredMeetingResults = [];
 
-  for (var searchKey in searchLimits) {
-    let searchValue = searchLimits[searchKey]
-
+  if (allCriteriaMustBeTrue) {
     for (let i = 0; i < json.length; i++) {
-      let thisMeeting = json[i][searchKey]
+      let currentMeeting = json[i];
+      let allCriteriaAreTrue = true;
 
-      if (thisMeeting && thisMeeting.includes(searchValue)) {
-        filteredMeetingResults.push(json[i]);
+      for (var searchKey in searchLimits) {
+        var searchValue = searchLimits[searchKey];
+        var meetingValue = currentMeeting[searchKey];
+
+        if (meetingValue && !meetingValue.includes(searchValue)) {
+          allCriteriaAreTrue = false;
+        }
+      }
+      if (allCriteriaAreTrue) {
+        allCriteriaAreTrue = true;
+        filteredMeetingResults.push(currentMeeting);
+      }
+    }
+  } else {
+    for (let i = 0; i < json.length; i++) {
+      var currentMeeting = json[i];
+
+      for (var searchKey in searchLimits) {
+        let searchValue = searchLimits[searchKey];
+        let meetingValue = currentMeeting[searchKey];
+
+        if (meetingValue && meetingValue.includes(searchValue)) {
+          filteredMeetingResults.push(json[i]);
+        }
       }
     }
   }
