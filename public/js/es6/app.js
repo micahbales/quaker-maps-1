@@ -1,7 +1,8 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.worshipstyle = "Semi-programmed";
-searchLimits.city = "Richmond";
+searchLimits.worshipstyle = "Programmed";
+searchLimits.state = "KS";
+searchLimits.branch = "Friends United Meeting";
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'));
@@ -10,49 +11,36 @@ function initMap() {
 
 function populateMap(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
-  var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
-    var filteredMeetingResults = filterMeetingResults(json);
+  var meetings = $.getJSON("./js/north-america-meetings.json", (meetingData) => {
+    var filteredMeetingResults = filterMeetingResults(meetingData);
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
   });
 }
 
-function filterMeetingResults(json) {
-  let filteredMeetingResults = [];
+function filterMeetingResults(meetingData) {
+  let filteredResults = [];
 
-  if (allCriteriaMustBeTrue) {
-    for (let i = 0; i < json.length; i++) {
-      let currentMeeting = json[i];
-      let allCriteriaAreTrue = true;
+  for (let i = 0; i < meetingData.length; i++) {
+    let currentMeeting = meetingData[i];
+    let allCriteriaAreTrue = true;
 
-      for (var searchKey in searchLimits) {
-        var searchValue = searchLimits[searchKey];
-        var meetingValue = currentMeeting[searchKey];
+    for (var searchKey in searchLimits) {
+      var searchValue = searchLimits[searchKey];
+      var meetingValue = currentMeeting[searchKey];
 
-        if (meetingValue && !meetingValue.includes(searchValue)) {
-          allCriteriaAreTrue = false;
-        }
-      }
-      if (allCriteriaAreTrue) {
-        allCriteriaAreTrue = true;
-        filteredMeetingResults.push(currentMeeting);
+      if (meetingValue && !meetingValue.includes(searchValue)) {
+        allCriteriaAreTrue = false;
+      } else if (meetingValue && meetingValue.includes(searchValue) && !allCriteriaMustBeTrue) {
+        filteredResults.push(currentMeeting);
       }
     }
-  } else {
-    for (let i = 0; i < json.length; i++) {
-      var currentMeeting = json[i];
-
-      for (var searchKey in searchLimits) {
-        let searchValue = searchLimits[searchKey];
-        let meetingValue = currentMeeting[searchKey];
-
-        if (meetingValue && meetingValue.includes(searchValue)) {
-          filteredMeetingResults.push(json[i]);
-        }
-      }
+    if (allCriteriaMustBeTrue && allCriteriaAreTrue) {
+      allCriteriaAreTrue = true;
+      filteredResults.push(currentMeeting);
     }
   }
-  return filteredMeetingResults;
+  return filteredResults;
 }
 
 function createMarkers(map, filteredMeetingResults, bounds) {
