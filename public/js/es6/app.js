@@ -1,3 +1,6 @@
+var searchLimits = new Object();
+searchLimits.worshipstyle = "Semi-programmed";
+
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'));
   populateMap(map);
@@ -6,41 +9,45 @@ function initMap() {
 function populateMap(map) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", (json) => {
-  var searchKey = "yearlymeeting";
-  var searchValue = "Baltimore YM"
-  var filteredMeetingResults = filterMeetingResults(json, searchKey, searchValue);
-  createMarkers(map, filteredMeetingResults, bounds);
-  map.fitBounds(bounds); // zoom and center the map according to all markers placed
-});
+    var filteredMeetingResults = filterMeetingResults(json);
+    createMarkers(map, filteredMeetingResults, bounds);
+    map.fitBounds(bounds); // zoom and center the map according to all markers placed
+  });
+}
 
-function filterMeetingResults(json, searchKey, searchValue) {
+function filterMeetingResults(json) {
   let filteredMeetingResults = [];
-  for (let i = 0; i < json.length; i++) {
-    let thisMeeting = json[i][searchKey]
-    if (thisMeeting && thisMeeting.includes(searchValue)) {
-      filteredMeetingResults.push(json[i]);
+
+  for (var searchKey in searchLimits) {
+    let searchValue = searchLimits[searchKey]
+
+    for (let i = 0; i < json.length; i++) {
+      let thisMeeting = json[i][searchKey]
+
+      if (thisMeeting && thisMeeting.includes(searchValue)) {
+        filteredMeetingResults.push(json[i]);
+      }
     }
   }
   return filteredMeetingResults;
 }
 
-function createMarkers(map, json, bounds) {
+function createMarkers(map, filteredMeetingResults, bounds) {
   var markers = [];
-    for (let i = 0; i < json.length; i++) {
-      let meetingInfo = json[i];
-      let lat = Number(json[i].latitude);
-      let lng = Number(json[i].longitude);
+  for (let i = 0; i < filteredMeetingResults.length; i++) {
+    let meetingInfo = filteredMeetingResults[i];
+    let lat = Number(filteredMeetingResults[i].latitude);
+    let lng = Number(filteredMeetingResults[i].longitude);
 
-      let marker = new google.maps.Marker({
-        position: {lat: lat, lng: lng},
-        map: map
-      });
-      setMarkerInfoWindow(map, marker, meetingInfo);
-      markers.push(marker);
-      bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
-    }
-  };
-}
+    let marker = new google.maps.Marker({
+      position: {lat: lat, lng: lng},
+      map: map
+    });
+    setMarkerInfoWindow(map, marker, meetingInfo);
+    markers.push(marker);
+    bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
+  }
+};
 
 function setMarkerInfoWindow(map, marker, meetingInfo) {
   let windowContent = `
