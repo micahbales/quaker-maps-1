@@ -1,0 +1,19 @@
+.top-bar {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  background-color: orange;
+  margin: 0; }
+
+body {
+  margin: 0;
+  padding: 0; }
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%; }
+
+/*# sourceMappingURL=app.css.map */
