@@ -2,9 +2,8 @@
 
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.worshipstyle = "Programmed";
-searchLimits.state = "KS";
-searchLimits.branch = "Friends United Meeting";
+searchLimits.branch = "Evangelical Friends Church Intl, Friends United Meeting";
+// searchLimits.worshipstyle = "Semi-programmed";
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'));
@@ -30,15 +29,13 @@ function filterMeetingResults(meetingData) {
     for (var searchKey in searchLimits) {
       var searchValue = searchLimits[searchKey];
       var meetingValue = currentMeeting[searchKey];
-
-      if (meetingValue && !meetingValue.includes(searchValue)) {
+      if (!meetingValue || !meetingValue.includes(searchValue)) {
         allCriteriaAreTrue = false;
       } else if (meetingValue && meetingValue.includes(searchValue) && !allCriteriaMustBeTrue) {
         filteredResults.push(currentMeeting);
       }
     }
     if (allCriteriaMustBeTrue && allCriteriaAreTrue) {
-      allCriteriaAreTrue = true;
       filteredResults.push(currentMeeting);
     }
   }
@@ -46,6 +43,7 @@ function filterMeetingResults(meetingData) {
 }
 
 function createMarkers(map, filteredMeetingResults, bounds) {
+
   var markers = [];
   for (var i = 0; i < filteredMeetingResults.length; i++) {
     var meetingInfo = filteredMeetingResults[i];
