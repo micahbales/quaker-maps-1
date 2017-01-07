@@ -1,10 +1,21 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.branch = "Evangelical Friends Church Intl, Friends United Meeting";
-// searchLimits.worshipstyle = "Semi-programmed";
+searchLimits.worshipstyle = "Semi-programmed";
+// searchLimits.branch = "Friends General Conference";
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'));
+  // set custom map styles
+  var mapStyles = [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}];
+  var styledMap = new google.maps.StyledMapType(mapStyles, {name : "Custom Syle"});
+  // create new map
+  var map = new google.maps.Map(document.getElementById('map'), {
+    mapTypeControlOptions: {
+      mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain','styled_map']
+    }
+  });
+  // assign custom styles to new map
+  map.mapTypes.set('styled_map', styledMap);
+  map.setMapTypeId('styled_map');
   populateMap(map);
 }
 
