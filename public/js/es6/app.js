@@ -1,7 +1,7 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
 searchLimits.worshipstyle = "Semi-programmed";
-// searchLimits.branch = "Friends General Conference";
+searchLimits.branch = "Friends General Conference";
 
 function initMap() {
   // set custom map styles
@@ -69,6 +69,17 @@ function createMarkers(map, filteredMeetingResults, bounds) {
   }
 };
 
+// so that only one infowindow may be open at a time
+var infoWindow;
+function getInfoWindow()	{
+  if (infoWindow == null)	{
+    infoWindow = new google.maps.InfoWindow({
+      content: ""
+    });
+  }
+  return infoWindow;
+}
+
 function setMarkerInfoWindow(map, marker, meetingInfo) {
   let windowContent = `
   <h1 id='meeting-name'> ${meetingInfo.name}</h1>
@@ -78,14 +89,9 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
     <h3>Branch:</h3> <em>${meetingInfo.branch || "not affiliated"}</em>
     <h3>Worship Style:</h3> <em>${meetingInfo.worshipstyle || "not defined"}</em>`
 
-  var infowindow = new google.maps.InfoWindow({
-    content: windowContent
-  });
-
-  marker.addListener('click', () => {
-    let currentInfoWindow = infowindow;
-    currentInfoWindow.close(map);
-    infowindow.open(map, marker);
+  google.maps.event.addListener(marker, 'click', function(){
+    getInfoWindow().setContent(windowContent);
+    getInfoWindow().open(map,this);
   });
 }
 
