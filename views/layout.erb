@@ -13,19 +13,14 @@
   <link rel="stylesheet" href="./stylesheets/app.css" />
 </head>
 <body>
-  <div class="wrapper">
-    <header>
-      <%= erb :header %>
-    </header>
 
-    <main>
-      <%= yield %>
-    </main>
-
-    <footer>
-      <%= erb :footer %>
-    </footer>
+  <div class="sidebar">
+    <%= erb :sidebar %>
   </div>
+
+  <main>
+    <%= yield %>
+  </main>
 
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFXJhXOeCTQNR-WEGAUvlpROhnaSR6x1o&callback=initMap"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
