@@ -1,7 +1,8 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.worshipstyle = "Semi-programmed";
-searchLimits.branch = "Friends General Conference";
+// searchLimits.worshipstyle = "Semi-programmed";
+// searchLimits.branch = "Friends General Conference";
+searchLimits.yearlymeeting = "South Central YM";
 
 function initMap() {
   // set custom map styles
@@ -9,9 +10,11 @@ function initMap() {
   var styledMap = new google.maps.StyledMapType(mapStyles, {name : "Custom Syle"});
   // create new map
   var map = new google.maps.Map(document.getElementById('map'), {
-    mapTypeControlOptions: {
-      mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain','styled_map']
-    }
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: true,
+    streetViewControl: false,
+    fullscreenControl: true
   });
   // assign custom styles to new map
   map.mapTypes.set('styled_map', styledMap);
