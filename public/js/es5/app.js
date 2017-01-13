@@ -2,21 +2,25 @@
 
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-// searchLimits.worshipstyle = "Semi-programmed";
+// searchLimits.worshipstyle = "Programmed";
 // searchLimits.branch = "Friends General Conference";
-searchLimits.yearlymeeting = "South Central YM";
+// searchLimits.yearlymeeting = "South Central YM";
+searchLimits.state = "PA";
 
 function initMap() {
   // set custom map styles
   var mapStyles = [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#444444" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": -100 }, { "lightness": 45 }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#46bcec" }, { "visibility": "on" }] }];
   var styledMap = new google.maps.StyledMapType(mapStyles, { name: "Custom Syle" });
-  // create new map
+  // create new map with custom controls
   var map = new google.maps.Map(document.getElementById('map'), {
     zoomControl: true,
     mapTypeControl: false,
     scaleControl: true,
     streetViewControl: false,
-    fullscreenControl: true
+    fullscreenControl: true,
+    fullscreenControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_BOTTOM
+    }
   });
   // assign custom styles to new map
   map.mapTypes.set('styled_map', styledMap);
