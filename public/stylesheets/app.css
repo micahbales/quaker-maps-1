@@ -10,10 +10,27 @@ body {
   margin: 0;
   padding: 0; }
 
+ul.no-bullet    {
+    border: 0px solid gray;
+    margin: 0px 0px 2px 0px;
+    padding: 0px;
+    display: block;
+    list-style-image: none;
+    list-style-type: none; }
+
 #map {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 100%; }
+  width: 70%; }
+
+#input    {
+    float: right;
+    top: 0;
+    width: 28%;
+    border:  0px solid green;
+    padding: 2px;
+    margin:  1px;
+    font-size: 11pt; }
 
 /*# sourceMappingURL=app.css.map */

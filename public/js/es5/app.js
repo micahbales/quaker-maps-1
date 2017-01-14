@@ -2,13 +2,36 @@
 
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.worshipstyle = "Programmed";
-searchLimits.state = "KS";
-searchLimits.branch = "Friends United Meeting";
+
+var map;
+var markers;
+var infoWindow;
+
+function getMap() {
+  if (map == null)	{
+    map = new google.maps.Map(document.getElementById('map'));
+  }
+  return map;
+}
+
+function getMarkers() {
+  if (markers == null)	{
+    markers = [];
+  }
+  return markers;
+}
+
+function getInfoWindow()	{
+  if (infoWindow == null)	{
+    infoWindow = new google.maps.InfoWindow({
+      content: ""
+    });
+  }
+  return infoWindow;
+}
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'));
-  populateMap(map);
+  populateMap(getMap());
 }
 
 function populateMap(map) {
@@ -20,6 +43,54 @@ function populateMap(map) {
   });
 }
 
+/* Remove all markers from the map. Call this before re-populating. */
+function clearMap() {
+  getMarkers().forEach(function(marker)  {
+    marker.setMap(null);
+  });
+}
+
+function setSearchLimits(style, branch, state)  {
+  searchLimits.worshipstyle = style || "";
+  searchLimits.branch = branch || "";
+  searchLimits.state = state || "";
+  console.log(searchLimits);
+}
+
+/* The form data might have radio buttons or checkboxes (which in JS
+ * are RadioNodeLists of HTMLInputElements), or select lists allowing
+ * multiple options (HTMLSelectElements containing HTMLOptionElements);
+ * they all behave similarly enough that it's just a matter of passing
+ * in the appprpriate property to determine which ones have been
+ * selected.
+ */
+function getSelectedOrChecked(collection, prop) {
+  var items = [];
+  for (var c = 0; c < collection.length; c++) {
+      if (collection[c][prop]) {
+        items.push(collection[c].value);
+      }
+  }
+  return items;
+}
+
+/* Take the form data, convert it into strings amenable for matching to
+ * the JSON data, set the search limits and re-populate the map.
+ */
+function handleInput(formData) {
+  var styleList = getSelectedOrChecked(formData.worshipstyle, "checked").join(", ");
+  console.log(styleList);
+  var branchList = getSelectedOrChecked(formData.branch, "checked").join(", ");
+  console.log(branchList);
+  var stateList = getSelectedOrChecked(formData.state, "selected").join(", ");
+  console.log(stateList);
+
+  setSearchLimits(styleList, branchList, stateList);
+  clearMap();
+  populateMap(map);
+}
+
+/* TODO: allow for more maximal search values (e.g., when state is "IL, IN") */
 function filterMeetingResults(meetingData) {
   var filteredResults = [];
 
@@ -46,7 +117,8 @@ function filterMeetingResults(meetingData) {
 }
 
 function createMarkers(map, filteredMeetingResults, bounds) {
-  var markers = [];
+  //re-initialize marker array
+  markers = null;
   for (var i = 0; i < filteredMeetingResults.length; i++) {
     var meetingInfo = filteredMeetingResults[i];
     var lat = Number(filteredMeetingResults[i].latitude);
@@ -57,23 +129,19 @@ function createMarkers(map, filteredMeetingResults, bounds) {
       map: map
     });
     setMarkerInfoWindow(map, marker, meetingInfo);
-    markers.push(marker);
-    bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
+    getMarkers().push(marker);
+    bounds.extend(getMarkers()[i].getPosition()); // expand `bounds` according to the new marker
   }
 };
 
 function setMarkerInfoWindow(map, marker, meetingInfo) {
   var windowContent = "\n  <h1 id='meeting-name'> " + meetingInfo.name + "</h1>\n    <h3>Address:</h3> <em>" + (meetingInfo.address || "") + " " + (meetingInfo.city || "") + ", " + (meetingInfo.state || "") + " " + (meetingInfo.zip || "") + "</em>\n    <h3>Contact:</h3> <em>" + (meetingInfo.email || "") + " " + (meetingInfo.phone || "") + "</em>\n    <h3>Yearly Meeting:</h3> <em>" + (meetingInfo.yearlymeeting || "not affiliated") + "</em>\n    <h3>Branch:</h3> <em>" + (meetingInfo.branch || "not affiliated") + "</em>\n    <h3>Worship Style:</h3> <em>" + (meetingInfo.worshipstyle || "not defined") + "</em>";
 
-  var infowindow = new google.maps.InfoWindow({
-    content: windowContent
+  google.maps.event.addListener(marker, 'click', function(){
+    getInfoWindow().setContent(windowContent);
+    getInfoWindow().open(map,this);
   });
 
-  marker.addListener('click', function () {
-    var currentInfoWindow = infowindow;
-    currentInfoWindow.close(map);
-    infowindow.open(map, marker);
-  });
 }
 
 initMap();
