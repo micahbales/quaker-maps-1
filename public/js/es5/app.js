@@ -2,9 +2,6 @@
 
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-searchLimits.worshipstyle = "Programmed";
-searchLimits.state = "CA";
-//~ searchLimits.branch = "Friends United Meeting";
 
 var infoWindow;
 
@@ -29,6 +26,41 @@ function populateMap(map) {
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
   });
+}
+
+function setSearchLimits(style, branch, state)  {
+  searchLimits.worshipstyle = style || "";
+  searchLimits.branch = branch || "";
+  searchLimits.state = state || "";
+  console.log(searchLimits);
+}
+
+/* The form data might have radio buttons or checkboxes (which in JS
+ * are RadioNodeLists of HTMLInputElements), or select lists allowing
+ * multiple options (HTMLSelectElements containing HTMLOptionElements);
+ * they all behave similarly enough that it's just a matter of passing
+ * in the appprpriate property to determine which ones have been
+ * selected.
+ */
+function getSelectedOrChecked(collection, prop) {
+  var items = [];
+  for (var c = 0; c < collection.length; c++) {
+      if (collection[c][prop]) {
+        items.push(collection[c].value);
+      }
+  }
+  return items;
+}
+
+function handleInput(formData) {
+  var styleList = getSelectedOrChecked(formData.worshipstyle, "checked").join(", ");
+  console.log(styleList);
+  var branchList = getSelectedOrChecked(formData.branch, "checked").join(", ");
+  console.log(branchList);
+  var stateList = getSelectedOrChecked(formData.state, "selected").join(", ");
+  console.log(stateList);
+
+  setSearchLimits(styleList, branchList, stateList);
 }
 
 /* TODO: allow for more maximal search values (e.g., when state is "IL, IN") */
