@@ -3,7 +3,23 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
 
+var map;
+var markers;
 var infoWindow;
+
+function getMap() {
+  if (map == null)	{
+    map = new google.maps.Map(document.getElementById('map'));
+  }
+  return map;
+}
+
+function getMarkers() {
+  if (markers == null)	{
+    markers = [];
+  }
+  return markers;
+}
 
 function getInfoWindow()	{
   if (infoWindow == null)	{
@@ -15,8 +31,7 @@ function getInfoWindow()	{
 }
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'));
-  populateMap(map);
+  populateMap(getMap());
 }
 
 function populateMap(map) {
@@ -25,6 +40,13 @@ function populateMap(map) {
     var filteredMeetingResults = filterMeetingResults(meetingData);
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
+  });
+}
+
+/* Remove all markers from the map. Call this before re-populating. */
+function clearMap() {
+  getMarkers().forEach(function(marker)  {
+    marker.setMap(null);
   });
 }
 
@@ -52,6 +74,9 @@ function getSelectedOrChecked(collection, prop) {
   return items;
 }
 
+/* Take the form data, convert it into strings amenable for matching to
+ * the JSON data, set the search limits and re-populate the map.
+ */
 function handleInput(formData) {
   var styleList = getSelectedOrChecked(formData.worshipstyle, "checked").join(", ");
   console.log(styleList);
@@ -61,6 +86,8 @@ function handleInput(formData) {
   console.log(stateList);
 
   setSearchLimits(styleList, branchList, stateList);
+  clearMap();
+  populateMap(map);
 }
 
 /* TODO: allow for more maximal search values (e.g., when state is "IL, IN") */
@@ -90,7 +117,8 @@ function filterMeetingResults(meetingData) {
 }
 
 function createMarkers(map, filteredMeetingResults, bounds) {
-  var markers = [];
+  //re-initialize marker array
+  markers = null;
   for (var i = 0; i < filteredMeetingResults.length; i++) {
     var meetingInfo = filteredMeetingResults[i];
     var lat = Number(filteredMeetingResults[i].latitude);
@@ -101,8 +129,8 @@ function createMarkers(map, filteredMeetingResults, bounds) {
       map: map
     });
     setMarkerInfoWindow(map, marker, meetingInfo);
-    markers.push(marker);
-    bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
+    getMarkers().push(marker);
+    bounds.extend(getMarkers()[i].getPosition()); // expand `bounds` according to the new marker
   }
 };
 
