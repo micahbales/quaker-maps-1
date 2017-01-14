@@ -3,7 +3,7 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
 searchLimits.worshipstyle = "Programmed";
-searchLimits.state = "IN";
+searchLimits.state = "CA";
 //~ searchLimits.branch = "Friends United Meeting";
 
 var infoWindow;
@@ -31,6 +31,7 @@ function populateMap(map) {
   });
 }
 
+/* TODO: allow for more maximal search values (e.g., when state is "IL, IN") */
 function filterMeetingResults(meetingData) {
   var filteredResults = [];
 
@@ -80,13 +81,6 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
     getInfoWindow().setContent(windowContent);
     getInfoWindow().open(map,this);
   });
-
-  //~ google.maps.event.addListener(marker, 'keyup', function(event){
-	  //~ var eKeys = ["Esc", "Escape"];
-	  //~ if (eKeys.includes(event.key)) {
-      //~ getInfoWindow().close;
-	  //~ }
-  //~ });
 
 }
 
