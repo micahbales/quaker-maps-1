@@ -1,14 +1,11 @@
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
 // searchLimits.worshipstyle = "Programmed";
-// searchLimits.branch = "Friends General Conference";
-// searchLimits.yearlymeeting = "South Central YM";
-searchLimits.state = "PA";
 
 function initMap() {
   // set custom map styles
   var mapStyles = [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}];
-  var styledMap = new google.maps.StyledMapType(mapStyles, {name : "Custom Syle"});
+  var styledMap = new google.maps.StyledMapType(mapStyles, {name : "QuakerMaps"});
   // create new map with custom controls
   var map = new google.maps.Map(document.getElementById('map'), {
     zoomControl: true,
@@ -47,7 +44,7 @@ function filterMeetingResults(meetingData) {
       var meetingValue = currentMeeting[searchKey];
       if (!meetingValue || !meetingValue.includes(searchValue)) {
         allCriteriaAreTrue = false;
-      } else if (meetingValue && meetingValue.includes(searchValue) && !allCriteriaMustBeTrue) {
+      } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue.includes(searchValue)) {
         filteredResults.push(currentMeeting);
       }
     }
@@ -103,3 +100,17 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
 }
 
 initMap();
+
+
+$(document).ready(function(){
+  $('.search-button').on('click', function(e) {
+    e.preventDefault();
+
+    let searchCriteria = {
+      "state":document.getElementById('state').value,
+      "worshipstyle":document.getElementById('worshipstyle').value,
+      "branch":document.getElementById('branch').value,
+      "yearlymeeting":document.getElementById('yearlymeeting').value
+    }
+  })
+});
