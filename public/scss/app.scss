@@ -38,6 +38,16 @@ body {
     select {
       width: 25%;
       min-width: 120px;
+      outline: none;
+    }
+
+    button {
+      background-color: #46bcec;
+      color: #f0f0f0;
+      border-radius: 15%;
+      height: 1.5em;
+      font-size: 1.1em;
+      outline: none;
     }
   }
 

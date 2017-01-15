@@ -32,7 +32,15 @@ body {
     justify-content: flex-end; }
     .sidebar .sidebar__form select {
       width: 25%;
-      min-width: 120px; }
+      min-width: 120px;
+      outline: none; }
+    .sidebar .sidebar__form button {
+      background-color: #46bcec;
+      color: #f0f0f0;
+      border-radius: 15%;
+      height: 1.5em;
+      font-size: 1.1em;
+      outline: none; }
   .sidebar h1 {
     font-family: "EB Garamond";
     vertical-align: middle;
