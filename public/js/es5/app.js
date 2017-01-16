@@ -94,7 +94,9 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
   });
 }
 
-initMap();
+$(document).ready(function () {
+  initMap();
+});
 
 $('.search-button').on('click', function (e) {
   e.preventDefault();
