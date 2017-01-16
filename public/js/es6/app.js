@@ -36,17 +36,19 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
     let currentMeeting = meetingData[i];
     let allCriteriaAreTrue = true;
 
-    for (var searchKey in searchLimits) {
-      var searchValue = searchLimits[searchKey];
-      var meetingValue = currentMeeting[searchKey];
-      if (!meetingValue || !meetingValue.includes(searchValue)) {
-        allCriteriaAreTrue = false;
-      } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue.includes(searchValue)) {
+    if (currentMeeting.latitude && currentMeeting.longitude) { // must check that latitude & longitude are defined, otherwise Google Maps crashes
+      for (var searchKey in searchLimits) {
+        var searchValue = searchLimits[searchKey];
+        var meetingValue = currentMeeting[searchKey];
+        if (!meetingValue || !meetingValue.includes(searchValue)) {
+          allCriteriaAreTrue = false;
+        } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue.includes(searchValue)) {
+          filteredResults.push(currentMeeting);
+        }
+      }
+      if (allCriteriaMustBeTrue && allCriteriaAreTrue) {
         filteredResults.push(currentMeeting);
       }
-    }
-    if (allCriteriaMustBeTrue && allCriteriaAreTrue) {
-      filteredResults.push(currentMeeting);
     }
   }
   return filteredResults;
@@ -123,6 +125,4 @@ $('.search-button').on('click', function(e) {
   searchLimits = processSearchLimits(searchLimits);
 
   initMap(searchLimits);
-
-  searchLimits = new Object();
 });
