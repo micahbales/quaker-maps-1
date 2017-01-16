@@ -2,9 +2,9 @@
 
 var allCriteriaMustBeTrue = true;
 var searchLimits = new Object();
-// searchLimits.worshipstyle = "Programmed";
+searchLimits.state = "KS";
 
-function initMap() {
+function initMap(searchLimits) {
   // set custom map styles
   var mapStyles = [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#444444" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": -100 }, { "lightness": 45 }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#46bcec" }, { "visibility": "on" }] }];
   var styledMap = new google.maps.StyledMapType(mapStyles, { name: "QuakerMaps" });
@@ -22,19 +22,19 @@ function initMap() {
   // assign custom styles to new map
   map.mapTypes.set('styled_map', styledMap);
   map.setMapTypeId('styled_map');
-  populateMap(map);
+  populateMap(map, searchLimits);
 }
 
-function populateMap(map) {
+function populateMap(map, searchLimits) {
   var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
   var meetings = $.getJSON("./js/north-america-meetings.json", function (meetingData) {
-    var filteredMeetingResults = filterMeetingResults(meetingData);
+    var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits);
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
   });
 }
 
-function filterMeetingResults(meetingData) {
+function filterMeetingResults(meetingData, searchLimits) {
   var filteredResults = [];
 
   for (var i = 0; i < meetingData.length; i++) {
@@ -95,17 +95,28 @@ function setMarkerInfoWindow(map, marker, meetingInfo) {
   });
 }
 
-initMap();
+initMap(searchLimits);
 
-$(document).ready(function () {
-  $('.search-button').on('click', function (e) {
-    e.preventDefault();
+$('.search-button').on('click', function (e) {
+  e.preventDefault();
 
-    var searchCriteria = {
-      "state": document.getElementById('state').value,
-      "worshipstyle": document.getElementById('worshipstyle').value,
-      "branch": document.getElementById('branch').value,
-      "yearlymeeting": document.getElementById('yearlymeeting').value
-    };
-  });
+  var searchLimits = {
+    "state": document.getElementById('state').value,
+    "worshipstyle": document.getElementById('worshipstyle').value,
+    "branch": document.getElementById('branch').value,
+    "yearlymeeting": document.getElementById('yearlymeeting').value
+  };
+
+  function processSearchLimits(searchLimits) {
+    for (var key in searchLimits) {
+      if (searchLimits[key] === "none selected") {
+        delete searchLimits[key];
+      }
+    }
+    return searchLimits;
+  }
+
+  searchLimits = processSearchLimits(searchLimits);
+
+  initMap(searchLimits);
 });
