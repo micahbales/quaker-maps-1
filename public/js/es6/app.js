@@ -51,7 +51,12 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
       }
     }
   }
-  return filteredResults;
+  if (filteredResults.length > 0) {
+    return filteredResults;
+  } else {
+    alert('There are no meetings matching these criteria. Please try using different search criteria.');
+    initMap();
+  }
 }
 
 function createMarkers(map, filteredMeetingResults, bounds) {
