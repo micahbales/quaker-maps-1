@@ -30,13 +30,12 @@ function populateMap(map, searchLimits, allCriteriaMustBeTrue) {
     var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
-    if (filteredMeetingResults.length < 2) {
-      var lat = filteredMeetingResults[0].latitude;
-      var lng = filteredMeetingResults[0].longitude;
-      var pt = new google.maps.LatLng(lat, lng);
-      map.setCenter(pt);
-      map.setZoom(14);
-    }
+    zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
+      // make sure the zoom isn't too tight
+      if (this.getZoom() > 14) {
+        this.setZoom(14);
+      }
+    });
   });
 }
 
