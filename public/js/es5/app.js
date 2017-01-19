@@ -76,18 +76,20 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
 function createMarkers(map, filteredMeetingResults, bounds) {
 
   var markers = [];
-  for (var i = 0; i < filteredMeetingResults.length; i++) {
-    var meetingInfo = filteredMeetingResults[i];
-    var lat = Number(filteredMeetingResults[i].latitude);
-    var lng = Number(filteredMeetingResults[i].longitude);
+  if (filteredMeetingResults) {
+    for (var i = 0; i < filteredMeetingResults.length; i++) {
+      var meetingInfo = filteredMeetingResults[i];
+      var lat = Number(filteredMeetingResults[i].latitude);
+      var lng = Number(filteredMeetingResults[i].longitude);
 
-    var marker = new google.maps.Marker({
-      position: { lat: lat, lng: lng },
-      map: map
-    });
-    setMarkerInfoWindow(map, marker, meetingInfo);
-    markers.push(marker);
-    bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
+      var marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map
+      });
+      setMarkerInfoWindow(map, marker, meetingInfo);
+      markers.push(marker);
+      bounds.extend(markers[i].getPosition()); // expand `bounds` according to the new marker
+    }
   }
 };
 
