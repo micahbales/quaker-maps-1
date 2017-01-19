@@ -5,9 +5,9 @@ body {
 
 #map {
   position: absolute;
-  top: 12%;
+  top: 13%;
   right: 0;
-  bottom: 0%;
+  bottom: 0;
   width: 100%;
   z-index: -1; }
 
@@ -15,7 +15,7 @@ body {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 12%;
+  height: 13%;
   background-color: #e8900c;
   -webkit-box-shadow: 3px 1px 3px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 3px 1px 3px 0px rgba(0, 0, 0, 0.75);
@@ -45,6 +45,18 @@ body {
     font-family: "EB Garamond";
     vertical-align: middle;
     margin-left: 3%; }
+
+.no-results-alert {
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  height: 75px;
+  background-color: red;
+  z-index: 2; }
+  .no-results-alert h1 {
+    float: left; }
+  .no-results-alert p {
+    float: left; }
 
 /* medium screens */
 @media (min-width: 600px) {

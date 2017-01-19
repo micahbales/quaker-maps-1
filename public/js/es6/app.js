@@ -26,9 +26,12 @@ function populateMap(map, searchLimits, allCriteriaMustBeTrue) {
     var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
     createMarkers(map, filteredMeetingResults, bounds);
     map.fitBounds(bounds); // zoom and center the map according to all markers placed
-    zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) { // make sure the zoom isn't too tight
-        if (this.getZoom() > 14){
+    let zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) { // make sure the zoom isn't too tight
+        if (this.getZoom() > 14) {
             this.setZoom(14);
+        }
+        if (this.getZoom() < 2) {
+          this.setZoom(2);
         }
     });
   });
@@ -59,8 +62,8 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
   if (filteredResults.length > 0) {
     return filteredResults;
   } else {
-    alert('There are no meetings matching these criteria. Please try using different search criteria.');
     initMap();
+    noResultsAlert();
   }
 }
 
@@ -135,4 +138,25 @@ $('.search-button').on('click', function(e) {
   searchLimits = processSearchLimits(searchLimits);
 
   initMap(searchLimits);
+});
+
+function noResultsAlert() {
+  let alertContent = `
+  <div class="no-results-alert">
+    <div class="alert__body">
+      <h1>Whoa!</h1>
+      <p>Looks like we don't have any meetings that meet your search criteria.</p>
+      <p>Care to try another search?</p>
+    </div>
+    <div class="alert__close">
+      <p>X</p>
+    </div>
+  </div>
+  `
+
+  $('body').append(alertContent);
+}
+
+$('.alert__close').on('click', function() {
+  alert('yo')
 });
