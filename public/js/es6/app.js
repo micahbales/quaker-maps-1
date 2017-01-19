@@ -157,6 +157,10 @@ function noResultsAlert() {
   `
 
   $('body').append(alertContent);
+
+  let fadeOutAlert = window.setTimeout(function(){
+    $('.no-results-alert').fadeOut(1500);
+  }, 3000);
 }
 
 $('.alert__close').on('click', function() {

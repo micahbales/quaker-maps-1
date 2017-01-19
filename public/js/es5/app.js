@@ -145,6 +145,10 @@ function noResultsAlert() {
   var alertContent = "\n  <div class=\"no-results-alert\">\n    <div class=\"alert__body\">\n      <h1>Whoa!</h1>\n      <p>Looks like we don't have any meetings that meet your search criteria.</p>\n      <p>Care to try another search?</p>\n    </div>\n    <div class=\"alert__close\">\n      <p>X</p>\n    </div>\n  </div>\n  ";
 
   $('body').append(alertContent);
+
+  var fadeOutAlert = window.setTimeout(function () {
+    $('.no-results-alert').fadeOut(1500);
+  }, 3000);
 }
 
 $('.alert__close').on('click', function () {
