@@ -14,7 +14,7 @@ body {
   z-index: -1;
 }
 
-.sidebar {
+.navbar {
   position: absolute;
   top: 0;
   width: 100%;
@@ -29,7 +29,7 @@ body {
   -webkit-flex-direction: row;
   flex-direction: row;
 
-  .sidebar__form {
+  .navbar__form {
     margin-top: 2%;
     margin-left: 3%;
     -webkit-justify-content: flex-end;
@@ -78,8 +78,8 @@ body {
 /* medium screens */
 
 @media (min-width: 600px) {
-  .sidebar {
-    .sidebar__form {
+  .navbar {
+    .navbar__form {
       margin-top: 3%;
 
       select {
@@ -95,8 +95,8 @@ body {
 /* large screens */
 
 @media (min-width: 1000px) {
-  .sidebar {
-    .sidebar__form {
+  .navbar {
+    .navbar__form {
       margin-top: 1.5%;
       margin-left: 1%;
 

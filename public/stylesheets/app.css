@@ -11,7 +11,7 @@ body {
   width: 100%;
   z-index: -1; }
 
-.sidebar {
+.navbar {
   position: absolute;
   top: 0;
   width: 100%;
@@ -25,23 +25,23 @@ body {
   display: flex;
   -webkit-flex-direction: row;
   flex-direction: row; }
-  .sidebar .sidebar__form {
+  .navbar .navbar__form {
     margin-top: 2%;
     margin-left: 3%;
     -webkit-justify-content: flex-end;
     justify-content: flex-end; }
-    .sidebar .sidebar__form select {
+    .navbar .navbar__form select {
       width: 25%;
       min-width: 120px;
       outline: none; }
-    .sidebar .sidebar__form button {
+    .navbar .navbar__form button {
       background-color: #46bcec;
       color: #f0f0f0;
       border-radius: 15%;
       height: 1.5em;
       font-size: 1.1em;
       outline: none; }
-  .sidebar h1 {
+  .navbar h1 {
     font-family: "EB Garamond";
     vertical-align: middle;
     margin-left: 3%; }
@@ -60,20 +60,20 @@ body {
 
 /* medium screens */
 @media (min-width: 600px) {
-  .sidebar .sidebar__form {
+  .navbar .navbar__form {
     margin-top: 3%; }
-    .sidebar .sidebar__form select {
+    .navbar .navbar__form select {
       width: 150px; }
-  .sidebar h1 {
+  .navbar h1 {
     margin-left: 2%; } }
 /* large screens */
 @media (min-width: 1000px) {
-  .sidebar .sidebar__form {
+  .navbar .navbar__form {
     margin-top: 1.5%;
     margin-left: 1%; }
-    .sidebar .sidebar__form select {
+    .navbar .navbar__form select {
       width: 200px; }
-  .sidebar h1 {
+  .navbar h1 {
     margin-left: 1%; } }
 
 /*# sourceMappingURL=app.css.map */
