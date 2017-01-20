@@ -145,24 +145,14 @@ $('.search-button').on('click', function(e) {
 function noResultsAlert() {
   let alertContent = `
   <div class="no-results-alert">
-    <div class="alert__body">
-      <h1>Whoa!</h1>
-      <p>Looks like we don't have any meetings that meet your search criteria.</p>
-      <p>Care to try another search?</p>
-    </div>
-    <div class="alert__close">
-      <p>X</p>
-    </div>
+      <h1>Not Found!</h1>
+      <p>Looks like no meetings meet your search criteria.</p>
   </div>
   `
 
-  $('body').append(alertContent);
+  $('main').append(alertContent);
 
   let fadeOutAlert = window.setTimeout(function(){
     $('.no-results-alert').fadeOut(1500);
   }, 3000);
 }
-
-$('.alert__close').on('click', function() {
-  alert('yo')
-});
