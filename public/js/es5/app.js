@@ -1,5 +1,7 @@
 "use strict";
 
+var prevSearchResults = [];
+
 function initMap() {
   var searchLimits = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : searchLimits || new Object();
   var allCriteriaMustBeTrue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : allCriteriaMustBeTrue || true;
@@ -66,10 +68,11 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
     }
   }
   if (filteredResults.length > 0) {
+    prevSearchResults = filteredResults;
     return filteredResults;
   } else {
-    initMap();
     noResultsAlert();
+    return prevSearchResults;
   }
 }
 

@@ -1,3 +1,4 @@
+var prevSearchResults = [];
 
 function initMap(searchLimits = searchLimits || new Object(), allCriteriaMustBeTrue = allCriteriaMustBeTrue || true) {
   // set custom map styles
@@ -60,10 +61,11 @@ function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) 
     }
   }
   if (filteredResults.length > 0) {
+    prevSearchResults = filteredResults;
     return filteredResults;
   } else {
-    initMap();
     noResultsAlert();
+    return prevSearchResults;
   }
 }
 
@@ -119,7 +121,6 @@ $(document).ready(function(){
 
 $('.search-button').on('click', function(e) {
   e.preventDefault();
-
 
   var searchLimits = {
     "state": $('#state').val(),
