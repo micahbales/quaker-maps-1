@@ -26,20 +26,19 @@ $(document).ready(function(){
     return map;
   }
 
-  function populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue) {
-    let bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
-    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
-    createMarkers(map, filteredMeetingResults, bounds);
-    map.fitBounds(bounds); // zoom and center the map according to all markers placed
-    let zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-        // make sure the zoom isn't too tight or wide
-        if (this.getZoom() > 14) {
-            this.setZoom(14);
-        }
-        if (this.getZoom() < 2) {
-          this.setZoom(2);
-        }
-    });
+  function noResultsAlert() {
+    let alertContent = `
+    <div class="no-results-alert">
+        <h1>Not Found!</h1>
+        <p>Looks like no meetings meet your search criteria.</p>
+    </div>
+    `
+
+    $('main').append(alertContent);
+
+    let fadeOutAlert = window.setTimeout(function(){
+      $('.no-results-alert').fadeOut(1500);
+    }, 3000);
   }
 
   function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) {
@@ -74,19 +73,21 @@ $(document).ready(function(){
     }
   }
 
-  function noResultsAlert() {
-    let alertContent = `
-    <div class="no-results-alert">
-        <h1>Not Found!</h1>
-        <p>Looks like no meetings meet your search criteria.</p>
-    </div>
-    `
-
-    $('main').append(alertContent);
-
-    let fadeOutAlert = window.setTimeout(function(){
-      $('.no-results-alert').fadeOut(1500);
-    }, 3000);
+  function populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue) {
+    // create boundaries of all markers
+    let bounds = new google.maps.LatLngBounds();
+    createMarkers(map, filteredMeetingResults, bounds);
+    // zoom and center the map according to all markers placed
+    map.fitBounds(bounds);
+    let zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+        // make sure the zoom isn't too tight or wide
+        if (this.getZoom() > 14) {
+            this.setZoom(14);
+        }
+        if (this.getZoom() < 2) {
+          this.setZoom(2);
+        }
+    });
   }
 
   function createMarkers(map, filteredMeetingResults, bounds) {
@@ -161,7 +162,8 @@ $(document).ready(function(){
 
     searchLimits = processSearchLimits(searchLimits);
 
-    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
+    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue);
 
   });
 
@@ -170,7 +172,8 @@ $(document).ready(function(){
   var meetingData;
   $.getJSON("./js/north-america-meetings.json", (json) => {
     meetingData = json;
-    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
+    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue);
   });
 
 });
