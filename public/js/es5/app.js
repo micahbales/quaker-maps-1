@@ -3,6 +3,7 @@
 $(document).ready(function () {
 
   var prevSearchResults = [];
+  var prevSearchLimits = new Object();
   var searchLimits = new Object();
   var allCriteriaMustBeTrue = true;
   var markers = [];
@@ -64,10 +65,22 @@ $(document).ready(function () {
     }
     if (filteredResults.length > 0) {
       prevSearchResults = filteredResults;
+      prevSearchLimits = searchLimits;
       return filteredResults;
     } else {
       noResultsAlert();
+      restorePrevSearchLimits(searchLimits, prevSearchLimits);
       return prevSearchResults;
+    }
+  }
+
+  function restorePrevSearchLimits(searchLimits, prevSearchLimits) {
+    for (var limit in searchLimits) {
+      if (prevSearchLimits[limit]) {
+        $("#" + limit).val(prevSearchLimits[limit]);
+      } else {
+        $("#" + limit).val("none selected");
+      }
     }
   }
 
