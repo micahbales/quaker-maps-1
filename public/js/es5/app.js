@@ -51,9 +51,9 @@ $(document).ready(function () {
           var searchValue = searchLimits[searchKey];
           var meetingValue = currentMeeting[searchKey];
 
-          if (!meetingValue || !meetingValue.includes(searchValue)) {
+          if (!meetingValue || !(meetingValue === searchValue)) {
             allCriteriaAreTrue = false;
-          } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue.includes(searchValue)) {
+          } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue === searchValue) {
             filteredResults.push(currentMeeting);
           }
         }
