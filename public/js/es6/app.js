@@ -3,7 +3,7 @@ $(document).ready(function(){
   var prevSearchResults = [];
   var searchLimits = new Object();
   var allCriteriaMustBeTrue = true;
-  let markers = [];
+  var markers = [];
 
   function initMap() {
     // set custom map styles
@@ -26,21 +26,19 @@ $(document).ready(function(){
     return map;
   }
 
-  function populateMap(map, searchLimits, allCriteriaMustBeTrue) {
+  function populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue) {
     let bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
-    let meetings = $.getJSON("./js/north-america-meetings.json", (meetingData) => {
-      let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
-      createMarkers(map, filteredMeetingResults, bounds);
-      map.fitBounds(bounds); // zoom and center the map according to all markers placed
-      let zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-          // make sure the zoom isn't too tight or wide
-          if (this.getZoom() > 14) {
-              this.setZoom(14);
-          }
-          if (this.getZoom() < 2) {
-            this.setZoom(2);
-          }
-      });
+    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
+    createMarkers(map, filteredMeetingResults, bounds);
+    map.fitBounds(bounds); // zoom and center the map according to all markers placed
+    let zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+        // make sure the zoom isn't too tight or wide
+        if (this.getZoom() > 14) {
+            this.setZoom(14);
+        }
+        if (this.getZoom() < 2) {
+          this.setZoom(2);
+        }
     });
   }
 
@@ -142,34 +140,37 @@ $(document).ready(function(){
     });
   }
 
+  $('.search-button').on('click', function(e) {
+    e.preventDefault();
 
-    $('.search-button').on('click', function(e) {
-      e.preventDefault();
+    let searchLimits = {
+      "state": $('#state').val(),
+      "worshipstyle": $('#worshipstyle').val(),
+      "branch": $('#branch').val(),
+      "yearlymeeting": $('#yearlymeeting').val()
+    }
 
-      let searchLimits = {
-        "state": $('#state').val(),
-        "worshipstyle": $('#worshipstyle').val(),
-        "branch": $('#branch').val(),
-        "yearlymeeting": $('#yearlymeeting').val()
-      }
-
-      function processSearchLimits(searchLimits) {
-        for (let key in searchLimits) {
-          if (searchLimits[key] === "none selected") {
-            delete searchLimits[key];
-          }
+    function processSearchLimits(searchLimits) {
+      for (let key in searchLimits) {
+        if (searchLimits[key] === "none selected") {
+          delete searchLimits[key];
         }
-        return searchLimits;
       }
+      return searchLimits;
+    }
 
-      searchLimits = processSearchLimits(searchLimits);
+    searchLimits = processSearchLimits(searchLimits);
 
-      populateMap(map, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
 
   });
 
-  // on initial page load
+  // on initial pageload
   const map = initMap();
-  populateMap(map, searchLimits, allCriteriaMustBeTrue);
+  var meetingData;
+  $.getJSON("./js/north-america-meetings.json", (json) => {
+    meetingData = json;
+    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
+  });
 
 });

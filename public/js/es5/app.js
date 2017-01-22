@@ -28,21 +28,19 @@ $(document).ready(function () {
     return map;
   }
 
-  function populateMap(map, searchLimits, allCriteriaMustBeTrue) {
+  function populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue) {
     var bounds = new google.maps.LatLngBounds(); // create boundaries of all markers
-    var meetings = $.getJSON("./js/north-america-meetings.json", function (meetingData) {
-      var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
-      createMarkers(map, filteredMeetingResults, bounds);
-      map.fitBounds(bounds); // zoom and center the map according to all markers placed
-      var zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
-        // make sure the zoom isn't too tight or wide
-        if (this.getZoom() > 14) {
-          this.setZoom(14);
-        }
-        if (this.getZoom() < 2) {
-          this.setZoom(2);
-        }
-      });
+    var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
+    createMarkers(map, filteredMeetingResults, bounds);
+    map.fitBounds(bounds); // zoom and center the map according to all markers placed
+    var zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
+      // make sure the zoom isn't too tight or wide
+      if (this.getZoom() > 14) {
+        this.setZoom(14);
+      }
+      if (this.getZoom() < 2) {
+        this.setZoom(2);
+      }
     });
   }
 
@@ -155,10 +153,14 @@ $(document).ready(function () {
 
     searchLimits = processSearchLimits(searchLimits);
 
-    populateMap(map, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
   });
 
-  // on initial page load
+  // on initial pageload
   var map = initMap();
-  populateMap(map, searchLimits, allCriteriaMustBeTrue);
+  var meetingData;
+  $.getJSON("./js/north-america-meetings.json", function (json) {
+    meetingData = json;
+    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
+  });
 });
