@@ -176,7 +176,6 @@ $(document).ready(function () {
   var meetingData;
   $.getJSON("./js/north-america-meetings.json", function (json) {
     meetingData = json;
-    var filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
-    populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
   });
 });
