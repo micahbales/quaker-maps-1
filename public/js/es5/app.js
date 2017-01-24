@@ -114,10 +114,33 @@ $(document).ready(function () {
         var meetingInfo = filteredMeetingResults[_i];
         var lat = Number(filteredMeetingResults[_i].latitude);
         var lng = Number(filteredMeetingResults[_i].longitude);
+        var branch = filteredMeetingResults[_i].worshipstyle;
+        var icon = void 0;
+
+        switch (branch) {
+          case "Programmed":
+            icon = "./images/programmed.png";
+            break;
+          case "Unprogrammed":
+            icon = "./images/unprogrammed.png";
+            break;
+          case "Semi-programmed":
+            icon = "./images/semiprogrammed.png";
+            break;
+          case "Programmed, Unprogrammed":
+            icon = "./images/semiprogrammed.png";
+            break;
+          case "Semi-programmed, Unprogrammed":
+            icon = "./images/semiprogrammed.png";
+            break;
+          default:
+            icon = "./images/other.png";
+        }
 
         var marker = new google.maps.Marker({
           position: { lat: lat, lng: lng },
-          map: map
+          map: map,
+          icon: icon
         });
         setMarkerInfoWindow(map, marker, meetingInfo);
         markers.push(marker);
