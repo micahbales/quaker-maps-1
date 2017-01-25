@@ -3,7 +3,6 @@ $(document).ready(function(){
   var prevSearchResults = [];
   var prevSearchLimits = new Object();
   var searchLimits = new Object();
-  var allCriteriaMustBeTrue = true;
   var markers = [];
 
   function initMap() {
@@ -42,7 +41,7 @@ $(document).ready(function(){
     }, 3000);
   }
 
-  function filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue) {
+  function filterMeetingResults(meetingData, searchLimits) {
     let filteredResults = [];
 
     for (let i = 0; i < meetingData.length; i++) {
@@ -50,21 +49,23 @@ $(document).ready(function(){
       let allCriteriaAreTrue = true;
 
       if (currentMeeting.latitude && currentMeeting.longitude) { // must check that latitude & longitude are defined, otherwise Google Maps crashes
+
         for (let searchKey in searchLimits) {
           let searchValue = searchLimits[searchKey];
-          let meetingValue = currentMeeting[searchKey];
+          let meetingValues = makeValuesArray(currentMeeting[searchKey]) || null;
 
-          if (!meetingValue || !(meetingValue === searchValue)) {
-            allCriteriaAreTrue = false;
-          } else if (!allCriteriaMustBeTrue && meetingValue && meetingValue === searchValue) {
-            filteredResults.push(currentMeeting);
+          for (let value in meetingValues) {
+            let meetingValue = meetingValues[value];
+            if (!meetingValue || !(meetingValue === searchValue)) {
+              allCriteriaAreTrue = false;
+            } else if (meetingValue && meetingValue === searchValue) {
+              filteredResults.push(currentMeeting);
+            }
           }
-        }
-        if (allCriteriaMustBeTrue && allCriteriaAreTrue) {
-          filteredResults.push(currentMeeting);
         }
       }
     }
+
     if (filteredResults.length > 0) {
       prevSearchResults = filteredResults;
       prevSearchLimits = searchLimits;
@@ -74,6 +75,17 @@ $(document).ready(function(){
       restorePrevSearchLimits(searchLimits, prevSearchLimits);
       return prevSearchResults;
     }
+  }
+
+  function makeValuesArray(meetingValues) {
+    let valuesArray;
+    if (meetingValues) {
+      valuesArray = meetingValues.split(',');
+      for (let i = 0; i < valuesArray.length; i++) {
+        valuesArray[i] = valuesArray[i].trim();
+      }
+    }
+    return valuesArray;
   }
 
   function restorePrevSearchLimits(searchLimits, prevSearchLimits) {
@@ -86,7 +98,7 @@ $(document).ready(function(){
     }
   }
 
-  function populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue) {
+  function populateMap(map, filteredMeetingResults, searchLimits) {
     // create boundaries of all markers
     let bounds = new google.maps.LatLngBounds();
     createMarkers(map, filteredMeetingResults, bounds);
@@ -198,8 +210,8 @@ $(document).ready(function(){
 
     searchLimits = processSearchLimits(searchLimits);
 
-    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits, allCriteriaMustBeTrue);
-    populateMap(map, filteredMeetingResults, searchLimits, allCriteriaMustBeTrue);
+    let filteredMeetingResults = filterMeetingResults(meetingData, searchLimits);
+    populateMap(map, filteredMeetingResults, searchLimits);
 
   });
 
@@ -208,7 +220,7 @@ $(document).ready(function(){
   var meetingData;
   $.getJSON("./js/north-america-meetings.json", (json) => {
     meetingData = json;
-    populateMap(map, meetingData, searchLimits, allCriteriaMustBeTrue);
+    populateMap(map, meetingData, searchLimits);
   });
 
 });
