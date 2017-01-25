@@ -53,16 +53,16 @@ $(document).ready(function(){
         for (let searchKey in searchLimits) {
           let searchValue = searchLimits[searchKey];
           let meetingValues = makeValuesArray(currentMeeting[searchKey]) || null;
-          let trueValuesCount = 0;
+          let trueValuePresent = false;
 
           for (let value in meetingValues) {
             let meetingValue = meetingValues[value];
             if (meetingValue && meetingValue === searchValue) {
-              trueValuesCount += 1;
+              trueValuePresent = true;
               break;
             }
           }
-          if (meetingValues && trueValuesCount >= Object.keys(meetingValues).length) {
+          if (meetingValues && trueValuePresent) {
             searchKeyCount += 1;
           }
         }
