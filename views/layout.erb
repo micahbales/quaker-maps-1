@@ -15,17 +15,17 @@
 </head>
 <body>
 
-  <div class="sidebar">
-    <%= erb :sidebar %>
+  <div class="navbar">
+    <%= erb :navbar %>
   </div>
 
   <main>
     <%= yield %>
   </main>
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFXJhXOeCTQNR-WEGAUvlpROhnaSR6x1o&callback=initMap"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFXJhXOeCTQNR-WEGAUvlpROhnaSR6x1o"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="/js/es5/app.js"></script>
+  <script src="/js/es5/app.js?version=<%= rand(1000) %>"></script>
   <!--[if lt IE 7]>
     <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
     <script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
