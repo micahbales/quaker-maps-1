@@ -46,22 +46,28 @@ $(document).ready(function(){
 
     for (let i = 0; i < meetingData.length; i++) {
       let currentMeeting = meetingData[i];
-      let allCriteriaAreTrue = true;
 
       if (currentMeeting.latitude && currentMeeting.longitude) { // must check that latitude & longitude are defined, otherwise Google Maps crashes
+        let searchKeyCount = 0;
 
         for (let searchKey in searchLimits) {
           let searchValue = searchLimits[searchKey];
           let meetingValues = makeValuesArray(currentMeeting[searchKey]) || null;
+          let trueValuesCount = 0;
 
           for (let value in meetingValues) {
             let meetingValue = meetingValues[value];
-            if (!meetingValue || !(meetingValue === searchValue)) {
-              allCriteriaAreTrue = false;
-            } else if (meetingValue && meetingValue === searchValue) {
-              filteredResults.push(currentMeeting);
+            if (meetingValue && meetingValue === searchValue) {
+              trueValuesCount += 1;
+              break;
             }
           }
+          if (meetingValues && trueValuesCount >= Object.keys(meetingValues).length) {
+            searchKeyCount += 1;
+          }
+        }
+        if (searchKeyCount >= Object.keys(searchLimits).length) {
+          filteredResults.push(currentMeeting);
         }
       }
     }

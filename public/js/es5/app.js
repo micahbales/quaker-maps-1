@@ -43,23 +43,29 @@ $(document).ready(function () {
 
     for (var i = 0; i < meetingData.length; i++) {
       var currentMeeting = meetingData[i];
-      var allCriteriaAreTrue = true;
 
       if (currentMeeting.latitude && currentMeeting.longitude) {
         // must check that latitude & longitude are defined, otherwise Google Maps crashes
+        var searchKeyCount = 0;
 
         for (var searchKey in searchLimits) {
           var searchValue = searchLimits[searchKey];
           var meetingValues = makeValuesArray(currentMeeting[searchKey]) || null;
+          var trueValuesCount = 0;
 
           for (var value in meetingValues) {
             var meetingValue = meetingValues[value];
-            if (!meetingValue || !(meetingValue === searchValue)) {
-              allCriteriaAreTrue = false;
-            } else if (meetingValue && meetingValue === searchValue) {
-              filteredResults.push(currentMeeting);
+            if (meetingValue && meetingValue === searchValue) {
+              trueValuesCount += 1;
+              break;
             }
           }
+          if (meetingValues && trueValuesCount >= Object.keys(meetingValues).length) {
+            searchKeyCount += 1;
+          }
+        }
+        if (searchKeyCount >= Object.keys(searchLimits).length) {
+          filteredResults.push(currentMeeting);
         }
       }
     }
