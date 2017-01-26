@@ -12,6 +12,7 @@ $(document).ready(function(){
     // create new map with custom controls
     let map = new google.maps.Map(document.getElementById('map'), {
       zoomControl: true,
+      minZoom: 3,
       mapTypeControl: false,
       scaleControl: true,
       streetViewControl: false,
@@ -115,8 +116,8 @@ $(document).ready(function(){
         if (this.getZoom() > 14) {
             this.setZoom(14);
         }
-        if (this.getZoom() < 2) {
-          this.setZoom(2);
+        if (this.getZoom() < 3) {
+          this.setZoom(3);
         }
     });
   }
